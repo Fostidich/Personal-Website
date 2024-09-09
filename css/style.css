@@ -1,0 +1,47 @@
+body {
+    font-family: ubuntu;
+    margin: 0;
+    padding: 0;
+    background-color: #e8f4ff;
+}
+
+header {
+    font-family: Ubuntu;
+    background-color: #404080;
+    color: #c0ffff;
+    padding: 10px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 5px;
+    margin: 0;
+    background-color: #000040;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 25px;
+}
+
+nav ul li a {
+    color: #e0e0ff;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+    background-color: #fff;
+}
+
+footer {
+    background-color: #000024;
+    color: #fff;
+    text-align: center;
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
