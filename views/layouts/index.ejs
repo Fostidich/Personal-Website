@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Kello's Website</title>
+        <title>Francesco Ostidich</title>
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico" />
         <meta charset="UTF-8" />
@@ -13,13 +13,8 @@
     </head>
     <body>
         <div class="container">
-            <!-- HEADER -->
             <%- include('../partials/header.ejs') %>
-            <!-- NAV -->
-            <%- include('../partials/nav.ejs') %>
-            <!-- MAIN -->
-            <%- body %>
-            <!-- FOOTER -->
+            <main class="main"><%- body %></main>
             <%- include('../partials/footer.ejs') %>
         </div>
     </body>

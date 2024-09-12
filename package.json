@@ -2,9 +2,9 @@
     "name": "personal-website",
     "version": "1.0.0",
     "description": "Francesco Ostidich Website",
-    "main": "server.js",
+    "main": "app.js",
     "scripts": {
-        "start": "server.js",
+        "start": "app.js",
         "dev": "nodemon app.js"
     },
     "repository": {
