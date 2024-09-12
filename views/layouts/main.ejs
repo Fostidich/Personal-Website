@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Kello's Website</title>
+        <link rel="stylesheet" href="/css/style.css" />
+        <link rel="icon" type="image/x-icon" href="/assets/icons/favicon.ico" />
+        <meta charset="UTF-8" />
+        <meta name="keywords" content="francesco, ostidich, fostidich" />
+        <meta name="description" content="Francesco Ostidich Website" />
+        <meta name="author" content="Francesco Ostidich" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script type="text/javascript" defer src="/js/script.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <!-- HEADER -->
+            <%- include('../partials/header.ejs') %>
+            <!-- NAV -->
+            <%- include('../partials/nav.ejs') %>
+            <!-- MAIN -->
+            <%- body %>
+            <!-- FOOTER -->
+            <%- include('../partials/footer.ejs') %>
+        </div>
+    </body>
+</html>
