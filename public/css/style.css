@@ -21,14 +21,17 @@ a:hover {
 }
 
 h1 {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.25));
     font-size: var(--font-size-h1);
 }
 
 h2 {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.25));
     font-size: var(--font-size-h2);
 }
 
 h3 {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.25));
     font-size: var(--font-size-h3);
 }
 

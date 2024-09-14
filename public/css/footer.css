@@ -1,7 +1,7 @@
 footer {
     padding: 0px max(25px, 2.5%);
     padding-top: 25px;
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .footer_links {

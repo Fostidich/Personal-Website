@@ -1,6 +1,6 @@
 header {
     padding: 25px 50px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -17,6 +17,7 @@ header {
 
 .header_logo:hover {
     background-color: rgba(0, 0, 0, 0.1);
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
     border-radius: 10px;
 }
 
@@ -40,4 +41,5 @@ header {
 .header_nav ul li a:hover {
     background-color: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
 }
