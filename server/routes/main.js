@@ -13,6 +13,14 @@ router.get('/projects', (req, res) => {
     res.render('projects');
 });
 
+router.get('/resume', (req, res) => {
+    res.render('resume');
+});
+
+router.get('/contacts', (req, res) => {
+    res.render('contacts');
+});
+
 router.get('/*', (req, res) => {
     res.render('unknown');
 });

@@ -1,0 +1,18 @@
+footer {
+    padding: 0px max(25px, 2.5%);
+    padding-top: 25px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.footer_links {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer_nav {
+    text-align: right;
+}
+
+.footer_nav ul li {
+    list-style-type: none;
+}
