@@ -11,6 +11,10 @@
     --font-size-p: clamp(1rem, 0.3vw + 0.87rem, 1.4rem);
 }
 
+i {
+    font-size: min(50px, 8vw);
+}
+
 a {
     color: var(--yellow);
     text-decoration: none;
@@ -72,4 +76,92 @@ main {
     font-size: var(--font-size-p);
     margin: 0px max(0px, calc(50vw - 500px));
     padding-bottom: 100px;
+}
+
+.resume {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+}
+
+.image_cv {
+    width: min(800px, 100%);
+    border-radius: 10px;
+}
+
+.download_cv {
+    margin-top: clamp(25px, 10%, 50px);
+    color: var(--white);
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+}
+
+.download_cv:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.contacts_list li {
+    padding-left: min(0, 15px);
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+.contacts_list img {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+    width: min(10vw, 50px);
+    height: auto;
+    margin: 10px 2vw;
+}
+
+.presentation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.presentation ul {
+    margin-top: 20px;
+    margin-right: 25px;
+    width: 100%;
+}
+
+.name_snippet {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+    border-radius: 10px;
+    margin: 0;
+    width: min(250px, 100%);
+}
+
+.langs_snippet {
+    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+    border-radius: 10px;
+    margin: 0;
+    width: min(270px, 100%);
+}
+
+@media only screen and (min-width: 700px) {
+    .presentation {
+        flex-direction: row;
+        align-items: start;
+    }
+
+    .presentation ul {
+        margin-top: 25px;
+        margin-right: 0;
+    }
+
+    .name_snippet {
+        margin: 25px 0 0 40px;
+        width: 400px;
+    }
+
+    .langs_snippet {
+        margin: 25px min(40px, 2vw) 0 0;
+        width: 380px;
+    }
 }

@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    res.redirect('/home');
+    res.redirect('/about');
 });
 
-router.get('/home', (req, res) => {
-    res.render('home');
+router.get('/about', (req, res) => {
+    res.render('about');
 });
 
 router.get('/projects', (req, res) => {
