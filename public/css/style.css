@@ -66,7 +66,7 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url('/assets/images/grainy_gradient.png') no-repeat center/cover;
+    background: url('/assets/images/grainy_gradient2.png') no-repeat center/cover;
     z-index: -1;
     pointer-events: none;
 }
@@ -217,17 +217,13 @@ main {
 
     .project_description_left img {
         float: left;
-        margin-right: 40px;
-        margin-bottom: 20px;
-        margin-top: 0;
+        margin: 0 40px 20px 0;
         width: 40%;
     }
 
     .project_description_right img {
         float: right;
-        margin-left: 40px;
-        margin-bottom: 20px;
-        margin-top: 0;
+        margin: 0 0 20px 40px;
         width: 40%;
     }
 }
