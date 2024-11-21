@@ -5,8 +5,9 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 
+// Set up HTTPS port and HTTP for redirection
 const PORT = process.env.PORT || 443;
-const HTTP_PORT = 80; // for redirection
+const HTTP_PORT = 80;
 
 // SSL certificate and key
 const options = {
@@ -19,9 +20,18 @@ const logsDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir);
 }
-const logFile = path.join(logDir, 'error.log');
+const logFile = path.join(logsDir, 'error.log');
 if (!fs.existsSync(logFile)) {
     fs.writeFileSync(logFile, '', { flag: 'w' });
+}
+
+// Log function definition for appending error traces
+function appendLog(err) {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] ${err.name}: ${err.message}`);
+    fs.appendFile(logFile, `[${timestamp}] ${err.stack}\n\n`, (writeErr) => {
+        if (writeErr) console.error(`[${timestamp}] Error writing to log file -`, err);
+    });
 }
 
 // Template engine
@@ -37,21 +47,15 @@ app.use((req, res, next) => {
         decodeURIComponent(req.path);
         next();
     } catch (err) {
-        console.error('URL Decoding Error:', err.message);
-        res.status(400).send('Invalid URL\n');
+        appendLog(err);
+        res.status(400).send(`Invalid URL: ${err.name}\n`);
     }
 });
 
 // Error and log management
 app.use((err, req, res, next) => {
-    const timestamp = new Date().toISOString();
-    const errorType = err.name || 'UnknownError';
-    logEntry = `[${timestamp}] ${errorType}`;
-    console.log(logEntry);
-    fs.appendFile(logFile, logEntry + `: ${err.stack}\n`, (err) => {
-        if (err) console.error('Error writing to log file:', err);
-    });
-    res.status(500).send('Internal Server Error\n');
+    if (err) appendLog(err);
+    res.status(500).send(`Internal Server Error: ${err.name}\n`);
 });
 
 // Routes
