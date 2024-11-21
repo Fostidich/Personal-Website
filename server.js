@@ -2,6 +2,7 @@ const express = require('express');
 const expressLayout = require('express-ejs-layouts');
 const https = require('https');
 const http = require('http');
+const path = require('path');
 const fs = require('fs');
 
 const PORT = process.env.PORT || 443;
@@ -12,6 +13,25 @@ const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/fostidich.it/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/fostidich.it/fullchain.pem'),
 };
+
+// Log file set up
+const logDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir);
+}
+const logFile = path.join(logDir, 'error.log');
+
+// Error and log management
+app.use((err, req, res, next) => {
+    const timestamp = new Date().toISOString();
+    const errorType = err.name || 'UnknownError';
+    logEntry = `[${timestamp}] ${errorType}`;
+    console.log(logEntry);
+    fs.appendFile(logFile, logEntry + `: ${err.stack}`, (err) => {
+        if (err) console.error('Error writing to log file:', err);
+    });
+    res.status(500).send('Internal Server Error');
+});
 
 // Template engine
 const app = express();
