@@ -15,23 +15,14 @@ const options = {
 };
 
 // Log file set up
-const logDir = path.join(__dirname, 'logs');
+const logsDir = path.join(__dirname, 'logs');
 if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir);
 }
 const logFile = path.join(logDir, 'error.log');
-
-// Error and log management
-app.use((err, req, res, next) => {
-    const timestamp = new Date().toISOString();
-    const errorType = err.name || 'UnknownError';
-    logEntry = `[${timestamp}] ${errorType}`;
-    console.log(logEntry);
-    fs.appendFile(logFile, logEntry + `: ${err.stack}`, (err) => {
-        if (err) console.error('Error writing to log file:', err);
-    });
-    res.status(500).send('Internal Server Error');
-});
+if (!fs.existsSync(logFile)) {
+    fs.writeFileSync(logFile, '', { flag: 'w' });
+}
 
 // Template engine
 const app = express();
@@ -39,6 +30,29 @@ app.use(express.static('public'));
 app.use(expressLayout);
 app.set('layout', './layouts/index');
 app.set('view engine', 'ejs');
+
+// Middleware to handle URL decoding errors
+app.use((req, res, next) => {
+    try {
+        decodeURIComponent(req.path);
+        next();
+    } catch (err) {
+        console.error('URL Decoding Error:', err.message);
+        res.status(400).send('Invalid URL\n');
+    }
+});
+
+// Error and log management
+app.use((err, req, res, next) => {
+    const timestamp = new Date().toISOString();
+    const errorType = err.name || 'UnknownError';
+    logEntry = `[${timestamp}] ${errorType}`;
+    console.log(logEntry);
+    fs.appendFile(logFile, logEntry + `: ${err.stack}\n`, (err) => {
+        if (err) console.error('Error writing to log file:', err);
+    });
+    res.status(500).send('Internal Server Error\n');
+});
 
 // Routes
 const router = express.Router();
