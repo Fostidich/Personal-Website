@@ -70,14 +70,20 @@ app.use(router);
 
 // HTTPS server
 const httpsServer = https.createServer(options, app);
+httpsServer.on('clientError', (err, socket) => {
+    if (err) socket.destroy();
+});
 httpsServer.listen(PORT, () => {
     console.log(`Listening on port ${PORT} for HTTPS`);
 });
 
 // HTTP server
 const httpServer = http.createServer((req, res) => {
-    res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
+    res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}`});
     res.end();
+});
+httpServer.on('clientError', (err, socket) => {
+    if (err) socket.destroy();
 });
 httpServer.listen(HTTP_PORT, () => {
     console.log(`Listening on port ${HTTP_PORT} for HTTP, redirecting to HTTPS`);
