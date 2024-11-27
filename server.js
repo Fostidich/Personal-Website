@@ -48,14 +48,14 @@ app.use((req, res, next) => {
         next();
     } catch (err) {
         appendLog(err);
-        res.status(400).send(`Invalid URL: ${err.name}\n`);
+        res.status(400).send(`Invalid URL: ${err.name}\r\n`);
     }
 });
 
 // Error and log management
 app.use((err, req, res, next) => {
-    if (err) appendLog(err);
-    res.status(500).send(`Internal Server Error: ${err.name}\n`);
+    appendLog(err);
+    res.status(500).send(`Internal Server Error: ${err.name}\r\n`);
 });
 
 // Routes
@@ -70,9 +70,18 @@ app.use(router);
 
 // HTTPS server
 const httpsServer = https.createServer(options, app);
+
+// Manage client error events by closing the socket
 httpsServer.on('clientError', (err, socket) => {
-    if (err) socket.destroy();
+    appenLog(err);
+    if (socket.writable) {
+        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+    } else {
+        socket.destroy();
+    }
 });
+
+// Launch HTTPS server
 httpsServer.listen(PORT, () => {
     console.log(`Listening on port ${PORT} for HTTPS`);
 });
@@ -82,9 +91,18 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}`});
     res.end();
 });
+
+// Manage client error events by closing the socket
 httpServer.on('clientError', (err, socket) => {
-    if (err) socket.destroy();
+    appendLog(err);
+    if (socket.writable) {
+        socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+    } else {
+        socket.destroy();
+    }
 });
+
+// Launch HTTP server
 httpServer.listen(HTTP_PORT, () => {
     console.log(`Listening on port ${HTTP_PORT} for HTTP, redirecting to HTTPS`);
 });
