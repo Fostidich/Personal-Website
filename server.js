@@ -73,7 +73,7 @@ const httpsServer = https.createServer(options, app);
 
 // Manage client error events by closing the socket
 httpsServer.on('clientError', (err, socket) => {
-    appenLog(err);
+    appendLog(err);
     if (socket.writable) {
         socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
     } else {
