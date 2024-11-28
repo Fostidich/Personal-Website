@@ -4,15 +4,18 @@ const https = require('https');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const helmet = require('helmet');
+const dotenv = require('dotenv');
 
 // Set up HTTPS port and HTTP for redirection
 const PORT = process.env.PORT || 443;
 const HTTP_PORT = 80;
 
 // SSL certificate and key
+dotenv.config();
 const options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/fostidich.it/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/fostidich.it/fullchain.pem'),
+    key: fs.readFileSync(process.env.SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
 };
 
 // Log file set up
@@ -36,10 +39,6 @@ function appendLog(err) {
 
 // Template engine
 const app = express();
-app.use(express.static('public'));
-app.use(expressLayout);
-app.set('layout', './layouts/index');
-app.set('view engine', 'ejs');
 
 // Middleware to handle URL decoding errors
 app.use((req, res, next) => {
@@ -48,15 +47,27 @@ app.use((req, res, next) => {
         next();
     } catch (err) {
         appendLog(err);
-        res.status(400).send(`Invalid URL: ${err.name}\r\n`);
+        res.status(400).send(`Invalid URL\r\n`);
     }
 });
 
 // Error and log management
 app.use((err, req, res, next) => {
     appendLog(err);
-    res.status(500).send(`Internal Server Error: ${err.name}\r\n`);
+    res.status(500).send(`Internal Server Error\r\n`);
 });
+
+// Enforce HTTPS for future requests
+app.use(helmet.hsts({
+    maxAge: 31536000,
+    includeSubDomains: true,
+}));
+
+// Set express framework
+app.use(express.static('public'));
+app.use(expressLayout);
+app.set('layout', './layouts/index');
+app.set('view engine', 'ejs');
 
 // Routes
 const router = express.Router();
@@ -106,3 +117,20 @@ httpServer.on('clientError', (err, socket) => {
 httpServer.listen(HTTP_PORT, () => {
     console.log(`Listening on port ${HTTP_PORT} for HTTP, redirecting to HTTPS`);
 });
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('\nShutting down servers...');
+    const closeServer = (server) => new Promise((resolve) => server.close(resolve));
+    try {
+        await closeServer(httpsServer);
+        console.log('HTTPS server closed');
+        await closeServer(httpServer);
+        console.log('HTTP server closed');
+        process.exit(0);
+    } catch (err) {
+        console.error('Error during shutdown:', err);
+        process.exit(1);
+    }
+});
+

@@ -19,9 +19,11 @@
     "author": "Francesco Ostidich",
     "homepage": "https://www.fostidich.com",
     "dependencies": {
+        "dotenv": "^16.4.5",
         "ejs": "^3.1.10",
         "express": "^4.20.0",
-        "express-ejs-layouts": "^2.5.1"
+        "express-ejs-layouts": "^2.5.1",
+        "helmet": "^8.0.0"
     },
     "devDependencies": {
         "nodemon": "^3.1.4"
