@@ -16,6 +16,8 @@ dotenv.config();
 const options = {
     key: fs.readFileSync(process.env.SSL_KEY_PATH),
     cert: fs.readFileSync(process.env.SSL_CERT_PATH),
+    secureOptions: require('constants').SSL_OP_NO_TLSv1 | require('constants').SSL_OP_NO_TLSv1_1,
+    ciphers: 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256',
 };
 
 // Log file set up
@@ -27,27 +29,49 @@ const logFile = path.join(logsDir, 'error.log');
 if (!fs.existsSync(logFile)) {
     fs.writeFileSync(logFile, '', { flag: 'w' });
 }
+const reqFile = path.join(logsDir, 'request.log');
+if (!fs.existsSync(reqFile)) {
+    fs.writeFileSync(reqFile, '', { flag: 'w' });
+}
 
 // Log function definition for appending error traces
 function appendLog(err) {
     const timestamp = new Date().toISOString();
     console.log(`[${timestamp}] ${err.name}: ${err.message}`);
     fs.appendFile(logFile, `[${timestamp}] ${err.stack}\n\n`, (writeErr) => {
-        if (writeErr) console.error(`[${timestamp}] Error writing to log file -`, err);
+        if (writeErr) console.error(`[${timestamp}] (Error writing to log file)`, err);
     });
 }
 
 // Template engine
 const app = express();
 
-// Middleware to handle URL decoding errors
+// Debugging requests log
 app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    fs.appendFile(reqFile, `[${timestamp}] ${req.method} ${req.url}\n`, (writeErr) => {
+        if (writeErr) console.error(`[${timestamp}] (Error writing to request file)`, `${req.method} ${req.url}`);
+    });
+    next();
+});
+
+// Middleware to handle errors
+app.use((req, res, next) => {
+    // Validate method first
+    const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+    if (!validMethods.includes(req.method)) {
+        console.error('Invalid method:', req.method);
+        res.status(405).send('Method Not Allowed\r\n');
+        return;
+    }
+
+    // Decode the URI
     try {
         decodeURIComponent(req.path);
         next();
     } catch (err) {
         appendLog(err);
-        res.status(400).send(`Invalid URL\r\n`);
+        res.status(400).send('Invalid URL\r\n');
     }
 });
 
@@ -81,6 +105,7 @@ app.use(router);
 
 // HTTPS server
 const httpsServer = https.createServer(options, app);
+httpsServer.setTimeout(10000);
 
 // Manage client error events by closing the socket
 httpsServer.on('clientError', (err, socket) => {
@@ -102,6 +127,7 @@ const httpServer = http.createServer((req, res) => {
     res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}`});
     res.end();
 });
+httpServer.setTimeout(10000);
 
 // Manage client error events by closing the socket
 httpServer.on('clientError', (err, socket) => {
