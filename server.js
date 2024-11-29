@@ -38,7 +38,7 @@ if (!fs.existsSync(reqFile)) {
 function rotateLogFile(filename) {
     const maxFileSize = 20 * 1024 * 1024;
     fs.stat(filename, (err, stats) => {
-        if (err) {
+        if (err && err.code !== 'ENOENT') {
             console.error('Error checking log file size', err);
             return;
         }
