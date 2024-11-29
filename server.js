@@ -34,10 +34,35 @@ if (!fs.existsSync(reqFile)) {
     fs.writeFileSync(reqFile, '', { flag: 'w' });
 }
 
+// Rotate the log file if it's too large
+function rotateLogFile(filename) {
+    const maxFileSize = 20 * 1024 * 1024;
+    fs.stat(filename, (err, stats) => {
+        if (err) {
+            console.error('Error checking log file size', err);
+            return;
+        }
+        if (stats && stats.size > maxFileSize) {
+            const archivedFile = path.join(logDir, `old_${filename}`);
+            if (!fs.existsSync(archivedFile)) {
+                fs.remove(archivedFile);
+            }
+            fs.rename(filename, archivedFile, (renameErr) => {
+                if (renameErr) {
+                    console.error('Error rotating log file', renameErr);
+                } else {
+                    console.log('Log file rotated:', archivedFile);
+                }
+            });
+        }
+    });
+}
+
 // Log function definition for appending error traces
 function appendLog(err) {
+    rotateLogFile('error.log');
     const timestamp = new Date().toISOString();
-    console.log(`[${timestamp}] ${err.name}: ${err.message}`);
+    console.error(`[${timestamp}] ${err.name}`);
     fs.appendFile(logFile, `[${timestamp}] ${err.stack}\n\n`, (writeErr) => {
         if (writeErr) console.error(`[${timestamp}] (Error writing to log file)`, err);
     });
@@ -48,6 +73,7 @@ const app = express();
 
 // Debugging requests log
 app.use((req, res, next) => {
+    rotateLogFile('request.log');
     const timestamp = new Date().toISOString();
     fs.appendFile(reqFile, `[${timestamp}] ${req.method} ${req.url}\n`, (writeErr) => {
         if (writeErr) console.error(`[${timestamp}] (Error writing to request file)`, `${req.method} ${req.url}`);
