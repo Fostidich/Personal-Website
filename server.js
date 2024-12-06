@@ -62,7 +62,6 @@ function rotateLogFile(filename) {
 function appendLog(err) {
     rotateLogFile('error.log');
     const timestamp = new Date().toISOString();
-    console.error(`[${timestamp}] ${err.name}`);
     fs.appendFile(logFile, `[${timestamp}] ${err.stack}\n\n`, (writeErr) => {
         if (writeErr) console.error(`[${timestamp}] (Error writing to log file)`, err);
     });
@@ -86,7 +85,7 @@ app.use((req, res, next) => {
     // Validate method first
     const validMethods = ['GET', 'POST', 'PUT', 'DELETE'];
     if (!validMethods.includes(req.method)) {
-        console.error('Invalid method:', req.method);
+        appendLog(new Error(`Invalid method: ${req.method}`));
         res.status(405).send('Method Not Allowed\r\n');
         return;
     }
