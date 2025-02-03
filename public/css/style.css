@@ -66,7 +66,7 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url('/assets/images/grainy_gradient2.png') no-repeat center/cover;
+    background: url('/assets/images/grainy_gradient2.jpg') no-repeat center/cover;
     z-index: -1;
     pointer-events: none;
 }
