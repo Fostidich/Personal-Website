@@ -66,7 +66,7 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: url('/assets/images/grainy_gradient2.jpg') no-repeat center/cover;
+    background: url('/assets/images/grainy_gradient.jpg') no-repeat center/cover;
     z-index: -1;
     pointer-events: none;
 }
@@ -117,31 +117,20 @@ main {
     margin: 10px 2vw;
 }
 
-.presentation {
+.welcome_images {
     display: flex;
+    width: 90%;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
+    gap: 10px;
+    margin: 0 auto;
 }
 
-.presentation ul {
-    margin-top: 20px;
-    margin-right: 25px;
-    width: 100%;
-}
-
-.name_snippet {
-    filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
+.welcome_images img {
     border-radius: 10px;
-    margin: 0;
-    width: min(250px, 100%);
-}
-
-.langs_snippet {
     filter: drop-shadow(10px 10px 5px rgba(0, 0, 0, 0.37));
-    border-radius: 10px;
-    margin: 0;
-    width: min(270px, 100%);
+    max-width: 33.3%;
+    margin: 0 0 20px 0;
 }
 
 @media only screen and (min-width: 700px) {
@@ -208,23 +197,32 @@ main {
     }
 
     .project_description_left {
-        display: block;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        margin: 40px 20px;
     }
 
     .project_description_right {
-        display: block;
-    }
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: flex-start;
+        margin: 40px 20px;
+    }    
 
     .project_description_left img {
-        float: left;
         margin: 0 40px 20px 0;
         width: 40%;
     }
 
     .project_description_right img {
-        float: right;
         margin: 0 0 20px 40px;
         width: 40%;
+    }
+
+    .project_description_left p,
+    .project_description_right p {
+        margin-top: 0; 
     }
 }
 
@@ -235,3 +233,4 @@ main {
     width: 80%;
     margin: 20px 10%;
 }
+
